@@ -1,0 +1,153 @@
+.tiptap {
+  h1 {
+    font-size: clamp(1.5rem, 3.2vw, 1.75rem);
+    @apply leading-normal;
+    @apply font-bold;
+    @apply border-[2px] border-pink-200;
+    @apply p-1;
+  }
+  h2 {
+    font-size: clamp(1.25rem, 3.2vw, 1.75rem);
+    @apply leading-normal;
+    @apply font-bold text-pink-200;
+    @apply border-b-[.1875rem] border-dashed border-pink-200;
+    @apply p-1;
+  }
+  h3 {
+    font-size: clamp(1.25rem, 3.2vw, 1.375rem);
+    @apply leading-normal;
+    @apply font-bold;
+    @apply border-l-[.3125rem] border-pink-200 px-5;
+  }
+  h4 {
+    font-size: clamp(1.25rem, 3.2vw, 1.125rem);
+    @apply leading-normal;
+    @apply font-bold;
+    @apply bg-coral-100 px-5 py-2.5;
+  }
+  h5 {
+    font-size: clamp(1rem, 3.2vw, 1rem);
+    @apply leading-normal;
+    @apply font-bold;
+    @apply bg-coral-100 px-5 py-2.5;
+  }
+  h6 {
+    font-size: clamp(1rem, 3.2vw, 1rem);
+    @apply leading-normal;
+    @apply font-bold;
+    @apply border-b border-pink-200;
+  }
+  p {
+    font-size: clamp(0.875rem, 3.2vw, 0.875rem);
+    @apply leading-normal;
+    @apply font-medium;
+    @apply whitespace-pre-wrap;
+  }
+  p:empty::before {
+    content: "";
+    display: inline-block;
+  }
+  a {
+    @apply text-pink-200;
+  }
+  ul {
+    list-style-type: disc;
+    @apply ml-5;
+  }
+  ol {
+    list-style-type: decimal;
+    @apply ml-5;
+  }
+  ol ol li {
+    list-style-type: lower-alQpha;
+  }
+  ol ol ol li {
+    list-style-type: lower-roman;
+  }
+
+  .split-view {
+    @apply justify-between p-1 [&>div]:grid [&>div]:grid-cols-2 [&>div]:gap-10;
+  }
+
+  split-view {
+    @apply flex flex-col gap-10 lg:flex-row;
+  }
+
+  .box-view {
+    @apply rounded-[.625rem] border-[.125rem] border-coral-250;
+    @apply px-[1.875rem] py-10;
+  }
+
+  .table-wrapper {
+    @apply overflow-x-auto;
+    @apply w-full;
+    @apply mb-4;
+    @apply whitespace-nowrap;
+    @apply max-w-full;
+  }
+
+  .table-pointer.show-pointer {
+    @apply relative pb-5;
+  }
+
+  .table-pointer::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 1.75rem;
+    height: 2.3125rem;
+    background-image: url("/placeholder/icon-hand.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateX(20px);
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease;
+  }
+
+  /* Show pointer when class is added */
+  .table-pointer.show-pointer::after {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  table {
+    @apply w-full border-collapse border border-pink-200;
+    @apply min-w-[38.75rem];
+    @apply table-fixed;
+    @apply [&_td]:w-[9.6875rem];
+    @apply [&_th]:w-[9.6875rem];
+  }
+
+  td {
+    @apply border border-pink-200;
+    @apply h-10 p-2;
+  }
+
+  tr {
+    @apply border border-pink-200;
+  }
+
+  th {
+    @apply border border-pink-200;
+    @apply bg-[#EF788C33];
+    @apply font-bold;
+    @apply text-center;
+    @apply p-2;
+    @apply h-10;
+  }
+}
+
+.tiptap--editor {
+  .split-view__item {
+    @apply bg-red-50;
+  }
+
+  /* Hide the hand pointer icon when in editor mode */
+  .table-pointer::after {
+    @apply hidden;
+  }
+}

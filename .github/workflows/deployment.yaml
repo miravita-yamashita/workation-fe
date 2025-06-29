@@ -1,0 +1,56 @@
+name: Deploying App
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Building Workation Nurse
+        env:
+          API_BASE_PATH: ${{ secrets.API_BASE_PATH }}
+          API_BASE_PATH_ADMIN: ${{ secrets.API_BASE_PATH_ADMIN }}
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+          AUTH_TRUST_HOST: ${{ secrets.AUTH_TRUST_HOST }}
+          EXTERNAL_IMAGE_HOST: ${{ secrets.EXTERNAL_IMAGE_HOST }}
+        run: npm run build
+
+      - name: Set up SSH Private Key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add Host to Known Hosts
+        run: ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy via SSH Private Key
+        env:
+          HOST: ${{ secrets.EC2_HOST }}
+          USER: ${{ secrets.EC2_USER }}
+        run: |
+          scp -r \
+              .next/ \
+              public/ \
+              next.config.ts \
+              tailwind.config.ts \
+              tsconfig.json \
+              package.json \
+              package-lock.json \
+              components.json \
+              postcss.config.mjs \
+              ${USER}@${HOST}:${{ secrets.DEV_DIRECTORY }}
+          ssh -o StrictHostKeyChecking=no ${USER}@${HOST} 'cd ${{ secrets.DEV_DIRECTORY }} && npm install --omit=dev && pm2 restart ${{ secrets.DEV_PM2 }} --update-env'
+        shell: bash
